@@ -1,11 +1,18 @@
 require_relative 'display'
-require_relative 'logic'
+require_relative 'player'
+
 class Mastermind
   include Display
 
   def play
     manual_script
-    Logic.new.game
+    selection = gets.chomp.to_i
+    if selection == 1
+      puts "You're the Codemaker"
+    elsif selection == 2
+      puts "You're the Codebreakr"
+      Player.new
+    end
   end
 end
 

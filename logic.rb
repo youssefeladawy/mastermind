@@ -1,82 +1,37 @@
-require 'pry-byebug'
 require_relative 'display'
 
-class Logic
+module Logic
   include Display
-  @@game_arr = [1, 2, 3, 4, 5, 6]
-
-  def initialize
-    @round_arr = [@@game_arr.sample, @@game_arr.sample, @@game_arr.sample, @@game_arr.sample]
-    @guesses = 1
-    @guess_arr = []
-    @winner = nil
+  
+  def win?(guess_array, game_array)
+    return true if game_array == guess_array
   end
 
-  def correct_position_numbers(cloned_arr)
+  def round(guess_array, game_array)
+    cloned_guess_arr = guess_array.clone
+    cloned_game_arr = game_array.clone
+    correct_position_numbers(cloned_game_arr, cloned_guess_arr)
+  end
+
+  def correct_position_numbers(cloned_game_arr, cloned_guess_arr)
     correct_position_indicator = 0
-    @guess_arr.each_with_index do |guess, i|
-      next unless guess == cloned_arr[i]
+    cloned_guess_arr.each_with_index do |guess, i|
+      next unless guess == cloned_game_arr[i]
 
       correct_position_indicator += 1
-      cloned_arr[i] = 'position'
-      @guess_arr[i] = 'marked'
+      cloned_game_arr[i] = 'position'
+      cloned_guess_arr[i] = 'marked'
     end
-    correct_numbers(cloned_arr, correct_position_indicator)
+    correct_numbers(cloned_game_arr, cloned_guess_arr, correct_position_indicator)
   end
 
-  def correct_numbers(cloned_arr, correct_position_indicator)
+  def correct_numbers(cloned_game_arr, cloned_guess_arr, correct_position_indicator)
     correct_indicator = 0
-    @guess_arr.each_with_index do |guess, i|
-      next unless cloned_arr.include?(guess)
+    cloned_guess_arr.each do |guess|
+      next unless cloned_game_arr.include?(guess)
 
       correct_indicator += 1
     end
     indicator(correct_position_indicator, correct_indicator) if correct_indicator > 0 || correct_position_indicator > 0
-  end
-
-  def round
-    cloned_arr = @round_arr.clone
-    correct_position_numbers(cloned_arr)
-    @guesses += 1
-  end
-
-  def turn
-    puts "\nTurn #{@guesses}: Type your four numbers guess to guess a code, or 'q' to quit the game"
-    @guess_arr = gets.chomp.split('')
-    if @guess_arr.length > 4
-      puts "Maximum of 4 numbers are allowed in a guess"
-      turn
-    end
-    @guess_arr.map! do |element|
-      if element == 'q'
-        @guesses = 12
-      elsif element.to_i.between?(1, 6)
-        element.to_i
-      elsif element == 'c'
-        p @round_arr
-        turn
-      else
-        puts 'please enter a number between 1 and 6'
-        turn
-      end
-    end
-    color(@guess_arr)
-    win?
-  end
-
-  def win?
-    if @round_arr == @guess_arr
-      puts "\nYou guessed it right"
-      @winner = true
-    else
-      round
-    end
-  end
-
-  def game
-    until @guesses >= 5 || !@winner.nil?
-      turn
-    end
-    puts "\nYou lost solution is #{color(@round_arr)}" if @winner.nil?
   end
 end
