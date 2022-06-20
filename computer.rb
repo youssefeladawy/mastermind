@@ -33,11 +33,9 @@ class Computer
 
   def computer_guess(guess_arr)
     matches = round(guess_arr, @round_arr)
-    p "matches #{matches}"
-    @guess_set.each do |guess|
+    @guess_set.select! do |guess|
       guess_arr_as_code = round(guess, guess_arr)
-      p "guess_arr_as_code #{guess_arr_as_code}"
-      @guess_set.delete(guess) unless matches[0] == guess_arr_as_code[0] && matches[1] == guess_arr_as_code[1]
+      matches[0] == guess_arr_as_code[0] && matches[1] == guess_arr_as_code[1]
     end
     @guess_arr = @guess_set[0]
   end
@@ -48,6 +46,7 @@ class Computer
     computer_guess(@guess_arr)
     enable_output
     color(@guess_arr)
+    p @guess_set
     if win?(@guess_arr, @round_arr)
       puts "\nComputer guessed it right"
       @winner = true
