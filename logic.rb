@@ -31,7 +31,9 @@ module Logic
       next unless cloned_game_arr.include?(guess)
 
       correct_indicator += 1
+      cloned_game_arr[cloned_game_arr.index(guess)] = 'indicated'
     end
     indicator(correct_position_indicator, correct_indicator) if correct_indicator > 0 || correct_position_indicator > 0
+    return [correct_position_indicator, correct_indicator]
   end
 end

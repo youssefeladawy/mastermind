@@ -1,19 +1,8 @@
-require_relative 'display'
+require_relative 'mastermind'
+require_relative 'logic'
 require_relative 'player'
-
-class Mastermind
-  include Display
-
-  def play
-    manual_script
-    selection = gets.chomp.to_i
-    if selection == 1
-      puts "You're the Codemaker"
-    elsif selection == 2
-      puts "You're the Codebreakr"
-      Player.new
-    end
-  end
-end
+require_relative 'computer'
+require_relative 'display'
+require_relative 'instructions'
 
 Mastermind.new.play
